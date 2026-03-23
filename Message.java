@@ -1,5 +1,6 @@
 import java.time.LocalDateTime;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 public class Message {
     private String messageID;
@@ -21,11 +22,17 @@ public class Message {
     }
 
     public String getFormattedTime() {
-        if (this.timestamp.toLocalDate().equals(LocalDate.now())) {
-            // return time in HH:mm format
-        } else {
-            // return date in dd/MM/yyyy format
+        String formattedtime;
+        if (this.timestamp.toLocalDate().equals(LocalDate.now())) 
+        // return time in HH:mm format if message was sent today
+        {
+            formattedtime = this.timestamp.format(DateTimeFormatter.ofPattern("HH:mm"));
+        } else 
+        // return date in dd/MM/yyyy format if message was sent before today
+        {
+            formattedtime = this.timestamp.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
         }
+        return formattedtime;
     }
 
     public LocalDateTime getUnformattedTime() {
