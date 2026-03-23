@@ -1,4 +1,5 @@
 import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 public class Message {
     private String messageID;
@@ -16,11 +17,19 @@ public class Message {
     }
 
     public void toggleLike() {
-        // Toggle the like status of the message
+        this.isLiked = !this.isLiked; // Inverts isLiked
     }
 
     public String getFormattedTime() {
-        // Return the timestamp in a human-readable format
+        if (this.timestamp.toLocalDate().equals(LocalDate.now())) {
+            // return time in HH:mm format
+        } else {
+            // return date in dd/MM/yyyy format
+        }
+    }
+
+    public LocalDateTime getUnformattedTime() {
+        return this.timestamp;
     }
 
 
