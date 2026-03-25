@@ -39,6 +39,10 @@ public class Message {
         return this.timestamp;
     }
 
+    public String getMessageID() {
+        return this.messageID;
+    }
+
 
     
 }
