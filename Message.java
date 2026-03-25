@@ -1,6 +1,7 @@
 import java.time.LocalDateTime;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.UUID;
 
 public class Message {
     private String messageID;
@@ -9,8 +10,8 @@ public class Message {
     private LocalDateTime timestamp;
     private boolean isLiked;
 
-    public Message(String messageID, User sender, String content) {
-        this.messageID = messageID;
+    public Message(User sender, String content) {
+        this.messageID = UUID.randomUUID().toString(); // Generate a unique message ID
         this.sender = sender;
         this.content = content;
         this.timestamp = LocalDateTime.now();
