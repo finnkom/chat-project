@@ -22,7 +22,9 @@ public class Chat {
         this.isDeleted = true; // Mark the chat as deleted
     }
 
-    public ArrayList<Message> getRecent():
-        // Return the recent messages in the chat
+    public ArrayList<Message> getRecent() {
+        int size = messages.size();
+        int from = math.max(0, size - 3);
+        return new ArrayList<>(messages.subList(from, size)); // Return the last 3 messages, or all if there are less than 3
     }
 }
