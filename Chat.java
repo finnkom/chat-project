@@ -16,11 +16,12 @@ public class Chat {
     }
 
     public void addMessage(User sender, String content) {
-        // Add a new message to the chat
+        messages.add(new Message(sender, content));
     }
     public void deleteChat() {
-        // Mark the chat as deleted
+        this.isDeleted = true; // Mark the chat as deleted
     }
+
     public ArrayList<Message> getRecent():
         // Return the recent messages in the chat
     }
