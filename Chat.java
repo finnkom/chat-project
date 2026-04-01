@@ -24,6 +24,9 @@ public class Chat {
         String content = scanner.nextLine();
         messages.add(new Message(sender, content));
     }
+
+
+
     public void deleteChat() {
         this.isDeleted = true; // Mark the chat as deleted
     }
@@ -43,6 +46,9 @@ public class Chat {
             System.out.println("\n" + message.getSender().getUsername());
             System.out.println(message.getContent());
             System.out.println(message.getFormattedTime());
+            if (message.getLiked()) {
+                System.out.println("Liked");
+            }
         }
     }
 }

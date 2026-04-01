@@ -38,6 +38,10 @@ public class Message {
         return formattedtime;
     }
 
+    public boolean getLiked() {
+        return this.isLiked;
+    }
+
     public LocalDateTime getUnformattedTime() {
         return this.timestamp;
     }
@@ -53,7 +57,7 @@ public class Message {
     public String getContent() {
         return this.content;
     }
-    
+
 
 
     
