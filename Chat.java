@@ -18,6 +18,19 @@ public class Chat {
         this.scanner = scanner;
     }
 
+    public String getChatID() {
+        return this.chatID;
+    }
+    public ArrayList<User> getParticipants() {
+        return this.participants;
+    }
+    public LinkedList<Message> getMessages() {
+        return this.messages;
+    }
+    public boolean getIsDeleted() {
+        return this.isDeleted;
+    }
+
     public void addMessage(User sender) {
         scanner.nextLine(); // Consume the newline left by nextInt() or similar
         System.out.print("Enter your message: ");
