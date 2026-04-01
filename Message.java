@@ -9,6 +9,7 @@ public class Message {
     private String content;
     private LocalDateTime timestamp;
     private boolean isLiked;
+    private boolean isDeleted;
 
     public Message(User sender, String content) {
         this.messageID = UUID.randomUUID().toString(); // Generate a unique message ID
@@ -16,10 +17,19 @@ public class Message {
         this.content = content;
         this.timestamp = LocalDateTime.now();
         this.isLiked = false;
+        this.isDeleted = false;
     }
 
     public void toggleLike() {
         this.isLiked = !this.isLiked; // Inverts isLiked
+    }
+
+    public void deleteMessage() {
+        this.isDeleted = true; // Mark the message as deleted
+    }
+
+    public boolean getIsDeleted() {
+        return this.isDeleted;
     }
 
     public String getFormattedTime() {
