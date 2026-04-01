@@ -1,4 +1,3 @@
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
@@ -24,7 +23,7 @@ public class Chat {
 
     public ArrayList<Message> getRecent() {
         int size = messages.size();
-        int from = math.max(0, size - 3);
+        int from = Math.max(0, size - 3);
         return new ArrayList<>(messages.subList(from, size)); // Return the last 3 messages, or all if there are less than 3
     }
 }
