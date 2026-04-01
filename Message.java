@@ -57,20 +57,22 @@ public class Message {
     }
 
     public void printMessage() {
+        System.out.println();
+        System.out.println("Message: " + this.messageIndex);
+        System.out.println(sender.getUsername());
         if (isDeleted) {
             System.out.println("This message has been deleted.");
         } else {
-            System.out.println("\n" + sender.getUsername());
             System.out.println(this.content);
-            System.out.println(this.getFormattedTime());
-            if (!likedBy.isEmpty()) {
-                String Likers = "Liked by: "; 
-                for (User user : likedBy) {
-                    Likers += user.getUsername() + ", ";
-                }
-                Likers = Likers.substring(0, Likers.length() - 2); // Remove the trailing comma and space
-                System.out.println(Likers);
+        }
+        System.out.println(this.getFormattedTime());
+        if (!likedBy.isEmpty()) {
+            String Likers = "Liked by: "; 
+            for (User user : likedBy) {
+                Likers += user.getUsername() + ", ";
             }
+            Likers = Likers.substring(0, Likers.length() - 2); // Remove the trailing comma and space
+            System.out.println(Likers);
         }
     }
 
