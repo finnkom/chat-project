@@ -26,6 +26,7 @@ public class Message {
 
     public void deleteMessage() {
         this.isDeleted = true; // Mark the message as deleted
+        this.content = null; // Clear the content to indicate deletion
     }
 
     public boolean getIsDeleted() {
