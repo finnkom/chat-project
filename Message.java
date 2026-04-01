@@ -1,5 +1,5 @@
-import java.time.LocalDateTime;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.UUID;
 
@@ -28,10 +28,12 @@ public class Message {
         // return time in HH:mm format if message was sent today
         {
             formattedtime = this.timestamp.format(DateTimeFormatter.ofPattern("HH:mm"));
+            formattedtime = "Today at " + formattedtime;
         } else 
         // return date in dd/MM/yyyy format if message was sent before today
         {
             formattedtime = this.timestamp.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+            formattedtime = "Sent on " + formattedtime;
         }
         return formattedtime;
     }
@@ -43,6 +45,15 @@ public class Message {
     public String getMessageID() {
         return this.messageID;
     }
+
+    public User getSender() {
+        return this.sender;
+    }
+
+    public String getContent() {
+        return this.content;
+    }
+    
 
 
     
