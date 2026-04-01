@@ -26,4 +26,16 @@ public class Chat {
         int from = Math.max(0, size - 3);
         return new ArrayList<>(messages.subList(from, size)); // Return the last 3 messages, or all if there are less than 3
     }
+
+    public void displayChat() {
+        if (isDeleted) {
+            System.out.println("This chat has been deleted.");
+            return;
+        }
+        for (Message message : messages) {
+            System.out.println("\n" + message.getSender().getUsername());
+            System.out.println(message.getContent());
+            System.out.println(message.getFormattedTime());
+        }
+    }
 }
