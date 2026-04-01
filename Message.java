@@ -1,6 +1,7 @@
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.UUID;
 
 public class Message {
@@ -8,7 +9,7 @@ public class Message {
     private User sender;
     private String content;
     private LocalDateTime timestamp;
-    private boolean isLiked;
+    private ArrayList<User> likedBy;
     private boolean isDeleted;
     private int messageIndex;
 
@@ -17,13 +18,17 @@ public class Message {
         this.sender = sender;
         this.content = content;
         this.timestamp = LocalDateTime.now();
-        this.isLiked = false;
+        this.likedBy = new ArrayList<>();
         this.isDeleted = false;
         this.messageIndex = messageIndex;
     }
 
-    public void toggleLike() {
-        this.isLiked = !this.isLiked; // Inverts isLiked
+    public void toggleLike(User user) {
+        if (likedBy.contains(user)) {
+            likedBy.remove(user);
+        } else {
+            likedBy.add(user);
+        }
     }
 
     public void deleteMessage() {
@@ -58,6 +63,14 @@ public class Message {
             System.out.println("\n" + sender.getUsername());
             System.out.println(this.content);
             System.out.println(this.getFormattedTime());
+            if (!likedBy.isEmpty()) {
+                String Likers = "Liked by: "; 
+                for (User user : likedBy) {
+                    Likers += user.getUsername() + ", ";
+                }
+                Likers = Likers.substring(0, Likers.length() - 2); // Remove the trailing comma and space
+                System.out.println(Likers);
+            }
         }
     }
 
@@ -65,8 +78,8 @@ public class Message {
         return this.messageIndex;
     }
 
-    public boolean getLiked() {
-        return this.isLiked;
+    public ArrayList<User> getLikedBy() {
+        return this.likedBy;
     }
 
     public LocalDateTime getUnformattedTime() {

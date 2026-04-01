@@ -57,9 +57,8 @@ public class Chat {
             return;
         }
         for (Message message : messages) {
-            if (message.getLiked()) {
-                System.out.println("Liked");
-            }
+            message.printMessage();
         }
     }
 }
+
