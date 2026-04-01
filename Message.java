@@ -10,14 +10,16 @@ public class Message {
     private LocalDateTime timestamp;
     private boolean isLiked;
     private boolean isDeleted;
+    private int messageIndex;
 
-    public Message(User sender, String content) {
+    public Message(User sender, String content, int messageIndex) {
         this.messageID = UUID.randomUUID().toString(); // Generate a unique message ID
         this.sender = sender;
         this.content = content;
         this.timestamp = LocalDateTime.now();
         this.isLiked = false;
         this.isDeleted = false;
+        this.messageIndex = messageIndex;
     }
 
     public void toggleLike() {
@@ -47,6 +49,20 @@ public class Message {
             formattedtime = "Sent on " + formattedtime;
         }
         return formattedtime;
+    }
+
+    public void printMessage() {
+        if (isDeleted) {
+            System.out.println("This message has been deleted.");
+        } else {
+            System.out.println("\n" + sender.getUsername());
+            System.out.println(this.content);
+            System.out.println(this.getFormattedTime());
+        }
+    }
+
+    public int getMessageIndex() {
+        return this.messageIndex;
     }
 
     public boolean getLiked() {
