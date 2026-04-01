@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.UUID;
 import java.util.Scanner;
+import java.util.UUID;
 
 public class Chat {
     private String chatID;
@@ -35,7 +35,8 @@ public class Chat {
         scanner.nextLine(); // Consume the newline left by nextInt() or similar
         System.out.print("Enter your message: ");
         String content = scanner.nextLine();
-        messages.add(new Message(sender, content));
+        int index = messages.size() + 1; // Message index starts at 1
+        messages.add(new Message(sender, content, index));
     }
 
 
@@ -56,9 +57,6 @@ public class Chat {
             return;
         }
         for (Message message : messages) {
-            System.out.println("\n" + message.getSender().getUsername());
-            System.out.println(message.getContent());
-            System.out.println(message.getFormattedTime());
             if (message.getLiked()) {
                 System.out.println("Liked");
             }
