@@ -1,20 +1,27 @@
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.UUID;
+import java.util.Scanner;
 
 public class Chat {
     private String chatID;
     private ArrayList<User> participants;
     private LinkedList<Message> messages;
     private boolean isDeleted;
+    private Scanner scanner;
 
-    public Chat(String chatID, ArrayList<User> participants) {
-        this.chatID = chatID;
+    public Chat(String chatID, ArrayList<User> participants, Scanner scanner) {
+        this.chatID = UUID.randomUUID().toString(); // Generate a unique chat ID
         this.participants = participants;
         this.messages = new LinkedList<>();
         this.isDeleted = false;
+        this.scanner = scanner;
     }
 
-    public void addMessage(User sender, String content) {
+    public void addMessage(User sender) {
+        scanner.nextLine(); // Consume the newline left by nextInt() or similar
+        System.out.print("Enter your message: ");
+        String content = scanner.nextLine();
         messages.add(new Message(sender, content));
     }
     public void deleteChat() {
