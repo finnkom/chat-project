@@ -69,7 +69,7 @@ public class Chat {
             int messageIndex = scanner.nextInt();
             if (messageIndex == 0) {
                 System.out.println("Action cancelled.");
-                return;
+                return null; // Return null to indicate cancellation
             }
             if (messageIndex < 1 || messageIndex > messages.size()) {
                 System.out.println("Invalid message number. Please try again.");
