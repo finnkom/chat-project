@@ -61,7 +61,7 @@ public class Chat {
         }
     }
 
-    public void selectMessage(User currentUser) {
+    public Message selectMessage(User currentUser) {
         // Keep asking for a valid message number
         Message selectedMessage = null;
         while (selectedMessage == null) {
@@ -85,6 +85,10 @@ public class Chat {
         System.out.println("Selected Message:");
         selectedMessage.printMessage();
 
+        return selectedMessage;
+    }
+
+    public void interactWithMessage(User currentUser, Message selectedMessage) {
         // Keep asking for a valid action choice
         boolean validChoice = false;
         while (!validChoice) {
@@ -132,6 +136,5 @@ public class Chat {
             }
         }
     }
-
 }
 
