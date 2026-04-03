@@ -31,6 +31,10 @@ public class Message {
         }
     }
 
+    public void editContent(String newContent) {
+        this.content = newContent;
+    }
+
     public void deleteMessage() {
         this.isDeleted = true; // Mark the message as deleted
         this.content = null; // Clear the content to indicate deletion

@@ -60,5 +60,78 @@ public class Chat {
             message.printMessage();
         }
     }
+
+    public void selectMessage(User currentUser) {
+        // Keep asking for a valid message number
+        Message selectedMessage = null;
+        while (selectedMessage == null) {
+            System.out.print("Enter the number of the message you want to interact with (0 to cancel): ");
+            int messageIndex = scanner.nextInt();
+            if (messageIndex == 0) {
+                System.out.println("Action cancelled.");
+                return;
+            }
+            if (messageIndex < 1 || messageIndex > messages.size()) {
+                System.out.println("Invalid message number. Please try again.");
+                continue;
+            }
+            selectedMessage = messages.get(messageIndex - 1);
+            if (selectedMessage.getIsDeleted()) {
+                System.out.println("This message has been deleted and cannot be interacted with. Please try again.");
+                selectedMessage = null; // Reset to keep looping
+            }
+        }
+
+        System.out.println("Selected Message:");
+        selectedMessage.printMessage();
+
+        // Keep asking for a valid action choice
+        boolean validChoice = false;
+        while (!validChoice) {
+            System.out.println("Options:");
+            System.out.println("0 - Cancel");
+            System.out.println("1 - Like/Unlike");
+            if (selectedMessage.getSender().equals(currentUser)) {
+                System.out.println("2 - Edit Content");
+                System.out.println("3 - Delete Message");
+            }
+            System.out.print("Enter your choice: ");
+            String choice = scanner.next();
+            switch (choice) {
+                case "0" -> {
+                    System.out.println("Action cancelled.");
+                    validChoice = true;
+                }
+                case "1" -> {
+                    selectedMessage.toggleLike(currentUser);
+                    System.out.println("Like status toggled.");
+                    validChoice = true;
+                }
+                default -> {
+                    if (selectedMessage.getSender().equals(currentUser)) {
+                        switch (choice) {
+                            case "2" -> {
+                                scanner.nextLine(); // Consume the newline
+                                System.out.print("Enter new content: ");
+                                String newContent = scanner.nextLine();
+                                selectedMessage.editContent(newContent);
+                                System.out.println("Message content updated.");
+                                validChoice = true;
+                            }
+                            case "3" -> {
+                                selectedMessage.deleteMessage();
+                                System.out.println("Message deleted.");
+                                validChoice = true;
+                            }
+                            default -> System.out.println("Invalid choice. Please try again.");
+                        }
+                    } else {
+                        System.out.println("Invalid choice. Please try again.");
+                    }
+                }
+            }
+        }
+    }
+
 }
 
