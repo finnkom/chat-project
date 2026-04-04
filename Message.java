@@ -3,6 +3,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.UUID;
+import java.util.HashSet;
 
 public class Message {
     private String messageID;
@@ -12,15 +13,43 @@ public class Message {
     private ArrayList<User> likedBy;
     private boolean isDeleted;
     private int messageIndex;
+    private HashSet<String> readBy;
 
     public Message(User sender, String content, int messageIndex) {
-        this.messageID = UUID.randomUUID().toString(); // Generate a unique message ID
-        this.sender = sender;
-        this.content = content;
-        this.timestamp = LocalDateTime.now();
-        this.likedBy = new ArrayList<>();
-        this.isDeleted = false;
+        this.messageID    = UUID.randomUUID().toString();
+        this.sender       = sender;
+        this.content      = content;
+        this.timestamp    = LocalDateTime.now();
+        this.likedBy      = new ArrayList<>();
+        this.isDeleted    = false;
         this.messageIndex = messageIndex;
+        this.readBy       = new HashSet<>();
+    }
+    // Load constructor — used by FileManager when restoring from file
+    public Message(String savedMessageID, User sender, String content,
+                   LocalDateTime savedTimestamp, int messageIndex) {
+        this.messageID    = savedMessageID;
+        this.sender       = sender;
+        this.content      = content;
+        this.timestamp    = savedTimestamp;
+        this.likedBy      = new ArrayList<>();
+        this.isDeleted    = false;
+        this.messageIndex = messageIndex;
+        this.readBy       = new HashSet<>();
+    }
+    // Mark this message as read by a user (identified by userId)
+    public void markReadBy(String userId) {
+        readBy.add(userId);
+    }
+
+    // Check whether a given user has read this message
+    public boolean isReadBy(String userId) {
+        return readBy.contains(userId);
+    }
+
+    // Returns the raw readBy set — used by FileManager for saving
+    public HashSet<String> getReadBy() {
+        return readBy;
     }
 
     public void toggleLike(User user) {

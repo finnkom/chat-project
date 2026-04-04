@@ -50,7 +50,18 @@ public class Chat {
         int from = Math.max(0, size - 3);
         return new ArrayList<>(messages.subList(from, size)); // Return the last 3 messages, or all if there are less than 3
     }
+    public void markAllReadBy(String userId) {
+        for (Message message : messages) {
+            message.markReadBy(userId);
+        }
+    }
 
+    // Returns true if the last message in this chat has been read by the given user.
+    // Returns true if there are no messages (nothing to read).
+    public boolean isLastMessageReadBy(String userId) {
+        if (messages.isEmpty()) return true;
+        return messages.getLast().isReadBy(userId);
+    }
     public void displayChat() {
         if (isDeleted) {
             System.out.println("This chat has been deleted.");
