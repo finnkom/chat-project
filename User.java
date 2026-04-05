@@ -1,8 +1,8 @@
-import java.util.HashSet;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
-
+import java.util.HashMap;
+import java.util.Map;
 public class User {
 
     // --- Fields ---
@@ -10,7 +10,7 @@ public class User {
     private String displayName;
     private String phoneNumber;
     private String statusMessage;
-    private HashSet<User> contacts;        // HashSet prevents duplicate contacts
+    private HashMap<String, String> contacts;        // HashSet prevents duplicate contacts
     private ArrayList<Chat> chats;         // All chats this user is part of
     private Queue<Message> notifications;  // FIFO queue for incoming notifications
 
@@ -20,7 +20,7 @@ public class User {
         this.displayName = displayName;
         this.phoneNumber = phoneNumber;
         this.statusMessage = "";
-        this.contacts = new HashSet<>();
+        this.contacts = new HashMap<>();
         this.chats = new ArrayList<>();
         this.notifications = new LinkedList<>(); // LinkedList implements Queue
     }
@@ -55,28 +55,33 @@ public class User {
     // CONTACT METHODS
     // =========================================================
 
-    // Adds a contact. HashSet ignores duplicates automatically.
-    public void addContact(User user) {
-        contacts.add(user);
+    // Adds a contact by their userId and a custom saved name.
+    public void addContactById(String userId, String savedName) {
+        contacts.put(userId, savedName);
     }
-
-    // Removes a contact. Does NOT delete any shared chats.
-    public void removeContact(User user) {
-        contacts.remove(user);
+    // Removes a contact by userId.
+    public void removeContactById(String userId) {
+        contacts.remove(userId);
     }
-
-    // Prints contacts sorted A-Z by name.
+    public HashMap<String, String> getContactMap() {
+        return contacts;
+    }
+    // Returns the saved name for a contact userId, or null if not a contact.
+    public String getSavedNameFor(String userId) {
+        return contacts.get(userId);
+    }
+    // Prints contacts sorted A-Z by saved name.
     public void printContactsAlphabetical() {
         if (contacts.isEmpty()) {
             System.out.println("No contacts.");
             return;
         }
-        // Copy to ArrayList so we can sort (HashSet has no order)
-        ArrayList<User> sorted = new ArrayList<>(contacts);
-        sorted.sort((a, b) -> a.getUsername().compareToIgnoreCase(b.getUsername()));
+
+        ArrayList<Map.Entry<String, String>> entries = new ArrayList<>(contacts.entrySet());
+        entries.sort((a, b) -> a.getValue().compareToIgnoreCase(b.getValue()));
         System.out.println("=== Contacts (A-Z) ===");
-        for (int i = 0; i < sorted.size(); i++) {
-            System.out.println((i + 1) + ". " + sorted.get(i).getUsername());
+        for (int i = 0; i < entries.size(); i++) {
+            System.out.println((i + 1) + ". " + entries.get(i).getValue() + " (ID: " + entries.get(i).getKey() + ")");
         }
     }
 
@@ -86,33 +91,53 @@ public class User {
             System.out.println("No contacts.");
             return;
         }
-        ArrayList<User> sorted = new ArrayList<>(contacts);
-        sorted.sort((a, b) -> {
-            java.time.LocalDateTime timeA = getLastMessageTimeWith(a);
-            java.time.LocalDateTime timeB = getLastMessageTimeWith(b);
+
+        // Build a list of contact IDs so we can sort them
+        ArrayList<String> contactIds = new ArrayList<>(contacts.keySet());
+
+        contactIds.sort((idA, idB) -> {
+            java.time.LocalDateTime timeA = getLastMessageTimeWithId(idA);
+            java.time.LocalDateTime timeB = getLastMessageTimeWithId(idB);
             if (timeA == null && timeB == null) return 0;
-            if (timeA == null) return 1;
+            if (timeA == null) return 1;  // null goes to the end
             if (timeB == null) return -1;
-            return timeB.compareTo(timeA); // Most recent first
+            return timeB.compareTo(timeA); // most recent first
         });
+
         System.out.println("=== Contacts (Recent) ===");
-        for (int i = 0; i < sorted.size(); i++) {
-            System.out.println((i + 1) + ". " + sorted.get(i).getUsername());
+        for (int i = 0; i < contactIds.size(); i++) {
+            String id = contactIds.get(i);
+            String savedName = contacts.get(id);
+            java.time.LocalDateTime lastTime = getLastMessageTimeWithId(id);
+            String timeLabel = lastTime == null ? "never messaged" : lastTime.format(
+                    java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")
+            );
+            System.out.println((i + 1) + ". " + savedName + " (ID: " + id + ")  - " + timeLabel);
         }
     }
 
     // Returns the timestamp of the most recent message shared with a contact.
     // Returns null if no messages have been exchanged.
-    private java.time.LocalDateTime getLastMessageTimeWith(User contact) {
+    // Returns the timestamp of the most recent message in any shared chat with a contact,
+// matched by userId string rather than User object.
+    private java.time.LocalDateTime getLastMessageTimeWithId(String contactId) {
         java.time.LocalDateTime latest = null;
         for (Chat chat : chats) {
-            if (chat.getParticipants().contains(contact)) {
-                LinkedList<Message> messages = chat.getMessages();
-                if (!messages.isEmpty()) {
-                    java.time.LocalDateTime t = messages.getLast().getUnformattedTime();
-                    if (latest == null || t.isAfter(latest)) {
-                        latest = t;
-                    }
+            if (chat.getIsDeleted()) continue;
+            // Check if this chat contains a participant with the matching userId
+            boolean containsContact = false;
+            for (User p : chat.getParticipants()) {
+                if (p.getUserId().equals(contactId)) {
+                    containsContact = true;
+                    break;
+                }
+            }
+            if (!containsContact) continue;
+            LinkedList<Message> messages = chat.getMessages();
+            if (!messages.isEmpty()) {
+                java.time.LocalDateTime t = messages.getLast().getUnformattedTime();
+                if (latest == null || t.isAfter(latest)) {
+                    latest = t;
                 }
             }
         }
@@ -181,7 +206,7 @@ public class User {
 
     public String getStatusMessage() { return statusMessage; }
 
-    public HashSet<User> getContacts() { return contacts; }
+    public HashMap<String, String> getContacts() { return contacts; }
 
     public ArrayList<Chat> getChats() { return chats; }
 
