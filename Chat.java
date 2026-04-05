@@ -32,7 +32,7 @@ public class Chat {
     }
 
     public void addMessage(User sender) {
-        scanner.nextLine(); // Consume the newline left by nextInt() or similar
+        scanner.nextLine();
         System.out.print("Enter your message: ");
         String content = scanner.nextLine();
         int index = messages.size() + 1; // Message index starts at 1
@@ -73,6 +73,7 @@ public class Chat {
     }
 
     public Message selectMessage(User currentUser) {
+        scanner.nextLine();
         // Keep asking for a valid message number
         Message selectedMessage = null;
         while (selectedMessage == null) {
@@ -98,7 +99,9 @@ public class Chat {
 
         return selectedMessage;
     }
-
+    public void setScanner(Scanner scanner) {
+        this.scanner = scanner;
+    }
     public void interactWithMessage(User currentUser, Message selectedMessage) {
         // Keep asking for a valid action choice
         boolean validChoice = false;

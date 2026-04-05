@@ -3,7 +3,7 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 public class FileManager {
-
+// labels for each section
     private static final String SECTION_USERS = "USERS";
     private static final String SECTION_CONTACTS = "CONTACTS";
     private static final String SECTION_CHATS = "CHATS";
@@ -18,7 +18,7 @@ public class FileManager {
 
         try (PrintWriter writer = new PrintWriter(new FileWriter(filename))) {
 
-            // users
+            // saving user
             writer.println(SECTION_USERS);
             for (User u : users) {
                 writer.println(
@@ -30,7 +30,7 @@ public class FileManager {
             }
             writer.println();
 
-            // CONTACTS — ownerUserId|contactUserId|savedName
+            // saving contacts
             writer.println(SECTION_CONTACTS);
             for (User u : users) {
                 for (Map.Entry<String, String> entry : u.getContactMap().entrySet()) {
@@ -43,7 +43,7 @@ public class FileManager {
             }
             writer.println();
 
-            // CHATS
+            // saving chats
             writer.println(SECTION_CHATS);
             for (Chat chat : allChats) {
                 StringBuilder pIds = new StringBuilder();
@@ -60,18 +60,18 @@ public class FileManager {
             }
             writer.println();
 
-            // MESSAGES
+            // saving messages
             writer.println(SECTION_MESSAGES);
             for (Chat chat : allChats) {
                 for (Message msg : chat.getMessages()) {
-                    // Build likedBy string
+
                     StringBuilder likedBy = new StringBuilder();
                     ArrayList<User> likers = msg.getLikedBy();
                     for (int i = 0; i < likers.size(); i++) {
                         likedBy.append(likers.get(i).getUserId());
                         if (i < likers.size() - 1) likedBy.append(",");
                     }
-                    // Build readBy string
+
                     StringBuilder readBy = new StringBuilder();
                     String[] readers = msg.getReadBy().toArray(new String[0]);
                     for (int i = 0; i < readers.length; i++) {
@@ -213,8 +213,8 @@ public class FileManager {
         return new ArrayList<>(userMap.values());
     }
 
-    // HELPERS
 
+// creates a map of all chats
     private static ArrayList<Chat> collectAllChats(ArrayList<User> users) {
         Map<String, Chat> seen = new LinkedHashMap<>();
         for (User u : users) {

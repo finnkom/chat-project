@@ -1,7 +1,6 @@
 import java.util.*;
 import java.util.Scanner;
 
-
 public class Main {
 
     private static final String SAVE_FILE = "chatapp_data.txt";
@@ -10,7 +9,7 @@ public class Main {
     private static User            currentUser = null;
     private static Scanner         scanner     = new Scanner(System.in);
 
-
+// load previous users chats
     public static void main(String[] args) {
         allUsers = FileManager.loadFromFile(SAVE_FILE);
         printBanner();
@@ -123,18 +122,18 @@ public class Main {
         for (int i = 0; i < active.size(); i++) {
             Chat c = active.get(i);
 
+// Show saved contact name otherwise the display name
 
             StringBuilder label = new StringBuilder();
             for (User p : c.getParticipants()) {
                 if (!p.getUserId().equals(currentUser.getUserId())) {
                     if (label.length() > 0) label.append(", ");
-                    // Show saved contact name if available, otherwise fall back to display name
-                    String name = currentUser.getSavedNameFor(p.getUserId());
+                     String name = currentUser.getSavedNameFor(p.getUserId());
                     label.append(name != null ? name : p.getUsername());
                 }
             }
 
-            // Read indicator on last message
+            // displays read status
             String readIndicator = c.isLastMessageReadBy(currentUser.getUserId()) ? "[READ]" : "[UNREAD]";
 
             System.out.println((i + 1) + ". " + label + "  " + readIndicator);
@@ -175,7 +174,8 @@ public class Main {
     }
 
     private static void openChatMenu(Chat chat) {
-        // Mark all messages as read when opening the chat
+        // mark all messages as read when opening the chat
+        chat.setScanner(scanner);
         chat.markAllReadBy(currentUser.getUserId());
         FileManager.saveToFile(allUsers, SAVE_FILE);
 
@@ -222,7 +222,7 @@ public class Main {
         scanner.nextLine();
         System.out.print("Enter the User ID of the person to chat with: ");
         String otherId = scanner.nextLine().trim();
-
+//exception handling
         User other = findUserById(otherId);
         if (other == null) {
             System.out.println("No user found with that ID.");
@@ -233,7 +233,7 @@ public class Main {
             return;
         }
 
-
+// check for chat
         Chat existingChat = null;
         for (Chat c : currentUser.getChats()) {
             if (!c.getIsDeleted() && c.getParticipants().size() == 2
@@ -341,7 +341,7 @@ public class Main {
 
         System.out.print("New status: ");
         String status = scanner.nextLine();
-
+// assigns null value if blank
         currentUser.editProfile(
                 name.isBlank()   ? null : name,
                 phone.isBlank()  ? null : phone,
@@ -361,14 +361,14 @@ public class Main {
         }
         return active;
     }
-
+    // Searches all users by ID
     private static User findUserById(String id) {
         for (User u : allUsers) {
             if (u.getUserId().equals(id)) return u;
         }
         return null;
     }
-
+// exception handling
     private static int safeNextInt() {
         try {
             return scanner.nextInt();
