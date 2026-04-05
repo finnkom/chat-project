@@ -19,14 +19,19 @@ public class SearchEngine
 {
     //Class Fields
     private ArrayList<Chat> chats;
+
     private ArrayList<Set> searchResults;
     private final int size;
 
+
+   
     public SearchEngine(ArrayList<Chat> chatLog)
     {
         chats = chatLog;
         size = chats.size();
     }
+
+
 
     public void searchFunction()
     {
