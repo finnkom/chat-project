@@ -19,7 +19,6 @@ public class SearchEngine
 {
     //Class Fields
     private ArrayList<Chat> chats;
-    private ArrayList<Set> searchResults;
     private final int size;
     
     public SearchEngine(ArrayList<Chat> chatLog)
@@ -34,6 +33,7 @@ public class SearchEngine
         boolean complete = false;
         ArrayList<String> keywords = new ArrayList<String>();
         Scanner s = new Scanner(System.in);
+        ArrayList<Chat> searchResults;
         
         //Method Execution
         System.out.println("This is the search function, Wildcards like '_' or '*' are supported");
@@ -53,7 +53,7 @@ public class SearchEngine
             }
         } while(!complete);
         searchResults = textSearch(keywords);
-        
+        displayResults(searchResults);
     }
     
     private String getKeyWord()
@@ -73,7 +73,7 @@ public class SearchEngine
         return input;
     }
     
-    private ArrayList<Set> textSearch(ArrayList<String> searchTerms)
+    private ArrayList<Chat> textSearch(ArrayList<String> searchTerms)
     {
         //Local Variables
         
@@ -87,16 +87,13 @@ public class SearchEngine
         LinkedList<Message> currentMessageList;
         Iterator<Message> iterator;
         
-        //Matching results ArrayList for chats
-        ArrayList<Chat> matching = new ArrayList();
-        ArrayList<Message> matchingMessage = new ArrayList();
         
         //Hashsets for Adding Successful Matches to hashsets for duplicate checking.
         Set<Chat> seenChat = new HashSet<>();
         Set<Message> seenMessage = new HashSet<>();
         
-        //Combine Results into ArrayList to be returned to main function
-        ArrayList<Set> searchResults = new ArrayList();
+        //Convert Results into ArrayList to be returned to main function
+        ArrayList<Chat> searchResults = new ArrayList();
         
         //Method Execution
         
@@ -120,15 +117,70 @@ public class SearchEngine
             }
         }
         
-        searchResults.add(seenChat);
-        searchResults.add(seenMessage);
+        for (Chat ele: seenChat)
+        {
+            searchResults.add(ele);
+        }
         
         //Return Arraylist of search results
         return searchResults;
     }
     
-    public void displayResults(ArrayList<Set> results)
+    private void displayResults(ArrayList<Chat> results)
     {
+        //Local Variables
+        ArrayList<Chat> chat = new ArrayList();
+        chat = results;
+        Scanner s = new Scanner(System.in);
+        int userInput;
+        String userStringInput;
+        Chat currentWorkingChat;
+        boolean returnToResults = false;
         
+        //Method Execution
+        System.out.println("Search Results");
+        do
+        {
+            int counter = 0;
+            userInput = 0;
+            if (chat.size() == 0)
+            {
+                System.out.println("No search results found, try a more generic keyword");
+            }
+            else
+            {
+                for (Chat chatResult : chat)
+                {
+                  System.out.println(counter++ + ". + Chat ID: " + chatResult.getChatID());
+                  System.out.println();
+                  counter++;
+                }
+                System.out.println("Please type the number of the chat you'd like to open, otherwise program will exit");
+                System.out.println("Between 1 and " + counter++ + "invalid submission will cause the program to prompt for resubmission: ");
+                do
+                {
+                    userInput = s.nextInt();
+                    s.nextLine();
+                } while(userInput > 0 && userInput < counter--);
+            }
+            userInput--;
+            currentWorkingChat = chat.get(userInput);
+            currentWorkingChat.displayChat();
+            System.out.println();
+            do
+            {
+            System.out.println("Would you like to terminate program? type 'Y'/'N' to indicate: ");
+            userStringInput = s.nextLine();
+            userStringInput.toUpperCase();
+            } while (userStringInput != "Y" || userStringInput != "N");
+            if (userStringInput.equals("Y"))
+            {
+                returnToResults = true;
+            }
+            else if (userStringInput.equals("N"))
+            {
+                returnToResults = false;
+            }
+        } while(returnToResults);
     }
 }
